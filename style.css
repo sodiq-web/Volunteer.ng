@@ -1,0 +1,17 @@
+* {
+    background-color: lightgreen;
+}
+
+button {
+    background-color: white;
+    color: lightgreen;
+    border: white;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+input {
+    margin-bottom: 10px;
+    border-radius: 5px;
+    
+}
