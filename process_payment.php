@@ -56,7 +56,7 @@ if (isset($_GET['txref'])) {
         $row = mysqli_fetch_array($user_query);
 
         //Get total donations for user
-        $user_donation_query = mysqli_query($con, "SELECT SUM(amount) as totalDonations FROM donation WHERE user_id = '$userId'") or die(myslqli_error($con));
+        $user_donation_query = mysqli_query($con, "SELECT SUM(amount) as totalDonations FROM donations WHERE user_id = '$userId'") or die(myslqli_error($con));
         $donation_row = mysql_fetch_array($user_donation_query);
 
         $totalDonations = $donation_row['totalDonations'];
@@ -70,7 +70,7 @@ if (isset($_GET['txref'])) {
         }
 
         //query db and add new donation
-        $queryDB = mysqli_query($con, "INSERT INTO donations SET status = 'Successful', donation_amount = '$amount', user_id = '$userId', email_of_donor = '$email', name_of_donor = '$fullName'");
+        $queryDB = mysqli_query($con, "INSERT INTO donations SET status = 'Successful', transaction_ref = '$txref', donation_amount = '$amount', user_id = '$userId', email_of_donor = '$email', name_of_donor = '$fullName'");
         if ($queryDB) {
             addAlert('success', 'Donation Received successfully!');
 

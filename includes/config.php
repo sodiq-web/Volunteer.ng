@@ -7,10 +7,10 @@ $flutterWaveEncyptionKey = 'FLWSECK_TEST5331b421dace';
 $flutterWaveSecretKey = 'FLWSECK_TEST-fc7ea5fa1b647a803af53a70bf520d27-X';
 
 //Database Options
-$databseHost = 'localhost';
+$databaseHost = 'localhost';
 $databaseName = 'volunteerng';
 $databaseUser = 'root';
-$databsePassword = '';
+$databasePassword = '';
 
 //Website
 $baseUrl = 'https://volunteerng.rf.gd';
