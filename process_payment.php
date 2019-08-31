@@ -38,18 +38,59 @@ if (isset($_GET['txref'])) {
     $chargeAmount = $resp['data']['amount'];
     $chargeCurrency = $resp['data']['currency'];
 
-    if (($chargeResponsecode == "00" || $chargeResponsecode == "0") && ($chargeAmount == $amount)  && ($chargeCurrency == $currency)) {
+    //Donor details
+    $fullName = $resp['data']['custname'];
+    $email = $resp['data']['custemail'];
+
+    if (($chargeResponsecode == "00" || $chargeResponsecode == "0")  && ($chargeCurrency == $currency)) {
         // transaction was successful...
         // please check other things like whether you already gave value for this ref
         // if the email matches the customer who owns the product etc
         //Give Value and return to Success page
 
-        $queryDB = mysqli_query($con, '');
+        //Get User ID from transaction ref
+        $uArray = explode('-', $txref);
+        $userId = $uArray[0];
+
+        $user_query = mysqli_query($con, "SELECT * FROM users WHERE user_id = '$userId'") or die(myslqli_error($con));
+        $row = mysqli_fetch_array($user_query);
+
+        //Get total donations for user
+        $user_donation_query = mysqli_query($con, "SELECT SUM(amount) as totalDonations FROM donation WHERE user_id = '$userId'") or die(myslqli_error($con));
+        $donation_row = mysql_fetch_array($user_donation_query);
+
+        $totalDonations = $donation_row['totalDonations'];
+        $sum = $totalDonations + $amount;
+        $neededAmount = $row['donation_amount'];
+
+
+        if ($sum >= $neededAmount) {
+            //Funding already gotten, update to completed!
+            mysqli_query($con, "UPDATE users SET is_completed = 1 WHERE user_id = '$userId'") or die(myslqli_error($con));
+        }
 
         //query db and add new donation
+        $queryDB = mysqli_query($con, "INSERT INTO donations SET status = 'Successful', donation_amount = '$amount', user_id = '$userId', email_of_donor = '$email', name_of_donor = '$fullName'");
+        if ($queryDB) {
+            addAlert('success', 'Donation Received successfully!');
+
+            //TODO: Redirect to payment success page
+            echo "<script type='text/javascript'>document.location='index.php'</script>";
+            exit(0);
+        } else {
+            addAlert('error', 'Transaction Successful, but something went wrong. Contect volunteerng@gmail.com');
+
+            echo "<script type='text/javascript'>document.location='index.php'</script>";
+            exit(0);
+        }
     } else {
-        //Dont Give Value and return to Failure page
+        //Trasanction failed
+        addAlert('error', 'Transaction Failed Please try again');
+
+        echo "<script type='text/javascript'>document.location='index.php'</script>";
+        exit(0);
     }
 } else {
-    die('No reference supplied');
+
+    header('Location: index.php');
 }

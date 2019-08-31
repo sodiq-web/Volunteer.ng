@@ -17,6 +17,13 @@ function validateEmail($email)
         ? FALSE : TRUE;
 }
 
+//Generate Unique Transacrion Reference
+function generateRef($userId)
+{
+    $uniqueId = uniqid();
+    return $userId . '-VLTNG_' . $uniqueId;
+}
+
 //Show Alert function
 function showAlert()
 {

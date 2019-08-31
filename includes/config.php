@@ -11,3 +11,6 @@ $databseHost = 'localhost';
 $databaseName = 'volunteerng';
 $databaseUser = 'root';
 $databsePassword = '';
+
+//Website
+$baseUrl = 'https://volunteerng.rf.gd';
